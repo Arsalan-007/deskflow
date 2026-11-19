@@ -1,0 +1,25 @@
+# Non-secret, user-editable settings. Secrets live in .env / GitHub Actions secrets, never here.
+
+topics:
+  - "tabular deep learning"
+  - "retrieval-augmented generation"
+
+research_interests: >
+  M.Sc. Data Analytics student working on tabular deep learning (MLP + attention
+  architectures) and retrieval-augmented generation systems. Most interested in
+  papers with concrete benchmark results on tabular classification/regression,
+  or RAG retrieval/evaluation methodology.
+
+relevance_rubric:
+  High: "Directly applicable to tabular DL baselines or RAG pipeline/eval design."
+  Medium: "Adjacent subfield or a useful technique, not a direct baseline."
+  Low: "Tangential; only loosely related to the research interests above."
+
+# Lookback window for each run, in days. A run only considers papers published
+# in [now - lookback_days, now); already-processed arXiv IDs are filtered
+# separately via Notion.
+lookback_days: 8
+
+# GitHub Actions cron schedule (UTC, best-effort) — keep this comment in sync
+# with .github/workflows/digest.yml's `schedule:` entry if you change it.
+schedule_cron: "0 8 * * 1" # Monday 08:00 UTC

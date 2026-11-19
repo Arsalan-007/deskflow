@@ -1,0 +1,30 @@
+name: Run digest
+
+on:
+  schedule:
+    # Monday 08:00 UTC — keep in sync with deskflow.config.yaml's schedule_cron.
+    # GitHub Actions cron is best-effort and can run late under platform load.
+    - cron: "0 8 * * 1"
+  workflow_dispatch: {}
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e .
+      - run: python -m agent.run_digest
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Ollama (the local default) has nothing to run against on a
+          # GitHub-hosted runner, so the scheduled/dispatched workflow always
+          # uses the hosted provider — the provider-swap is load-bearing
+          # here, not just a nice-to-have.
+          LLM_PROVIDER: anthropic
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
