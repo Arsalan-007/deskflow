@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     ollama_model: str = "mistral"
     ollama_host: str = "http://localhost:11434"
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.8-flash"
 
     deskflow_config_path: str = "deskflow.config.yaml"
 
