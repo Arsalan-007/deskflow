@@ -5,6 +5,7 @@ point of this project."""
 from __future__ import annotations
 
 import json
+import os
 import sys
 from contextlib import AsyncExitStack
 from datetime import datetime
@@ -24,7 +25,17 @@ class DeskflowMCPClient:
         self._session: ClientSession | None = None
 
     async def __aenter__(self) -> DeskflowMCPClient:
-        params = StdioServerParameters(command=sys.executable, args=["-m", "mcp_server.server"])
+        # mcp's stdio_client does NOT inherit the parent's full environment
+        # by default (only a safe allowlist like PATH/HOME) — this is the
+        # same trust boundary as our own subprocess, not a third-party MCP
+        # server, so explicitly forwarding os.environ is correct here. Without
+        # it, the spawned server never sees NOTION_TOKEN etc. in environments
+        # with no .env file on disk (e.g. GitHub Actions).
+        params = StdioServerParameters(
+            command=sys.executable,
+            args=["-m", "mcp_server.server"],
+            env=dict(os.environ),
+        )
         read, write = await self._stack.enter_async_context(stdio_client(params))
         self._session = await self._stack.enter_async_context(ClientSession(read, write))
         await self._session.initialize()
