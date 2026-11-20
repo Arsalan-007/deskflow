@@ -7,6 +7,7 @@ stray bracket breaks a naive `\\[.*\\]` regex extraction)."""
 from __future__ import annotations
 
 import json
+import time
 from typing import Protocol
 
 from .config import settings
@@ -37,15 +38,29 @@ class OllamaGenerator:
 
 
 class GeminiGenerator:
+    # Free tier is 15 requests/minute (per the account's own rate-limit page,
+    # not a guessed number). Self-pacing avoids burning the retry budget and
+    # wall-clock time on 429s that are entirely predictable in advance.
+    _MIN_INTERVAL_SECONDS = 4.5
+
     def __init__(self, model: str, api_key: str) -> None:
         from google import genai
 
         self._client = genai.Client(api_key=api_key)
         self._model = model
+        self._last_call_at: float | None = None
+
+    def _pace(self) -> None:
+        if self._last_call_at is not None:
+            elapsed = time.monotonic() - self._last_call_at
+            if elapsed < self._MIN_INTERVAL_SECONDS:
+                time.sleep(self._MIN_INTERVAL_SECONDS - elapsed)
+        self._last_call_at = time.monotonic()
 
     def complete_json(self, system: str, user: str, schema: dict) -> dict:
         from google.genai import types
 
+        self._pace()
         resp = self._client.models.generate_content(
             model=self._model,
             contents=user,

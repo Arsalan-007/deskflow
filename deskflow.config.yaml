@@ -11,9 +11,16 @@ research_interests: >
   or RAG retrieval/evaluation methodology.
 
 relevance_rubric:
-  High: "Directly applicable to tabular DL baselines or RAG pipeline/eval design."
+  High: >
+    Directly contributes a retrieval, evaluation, or tabular-DL METHOD or
+    benchmark result. A paper that merely USES RAG as a tool inside an
+    unrelated application domain (e.g. healthcare, agriculture, legal,
+    enterprise customer support, companion chatbots) is NOT High just
+    because RAG is central to its system — score those Medium or Low
+    instead, based on whether the underlying retrieval/eval technique
+    itself is novel enough to be useful outside that domain.
   Medium: "Adjacent subfield or a useful technique, not a direct baseline."
-  Low: "Tangential; only loosely related to the research interests above."
+  Low: "Tangential; only loosely related to the research interests above, or a domain-specific RAG application with no transferable methodology."
 
 # Lookback window for each run, in days. A run only considers papers published
 # in [now - lookback_days, now); already-processed arXiv IDs are filtered
