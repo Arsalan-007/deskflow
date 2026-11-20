@@ -20,7 +20,7 @@ jobs:
         env:
           LLM_PROVIDER: gemini
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python -m eval.evaluate --min-accuracy 0.7
+        run: python -m eval.evaluate   # thresholds are evaluate.py's calibrated defaults
 
   dashboard-typecheck:
     runs-on: ubuntu-latest

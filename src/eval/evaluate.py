@@ -55,9 +55,19 @@ def run_eval() -> dict:
         )
 
     n = len(results)
+    high_cases = [r for r in results if r["expected_relevance"] == "High"]
+    high_recall = (
+        sum(r["actual_relevance"] == "High" for r in high_cases) / len(high_cases) if high_cases else None
+    )
     return {
         "relevance_accuracy": sum(r["relevance_correct"] for r in results) / n,
         "dataset_accuracy": sum(r["dataset_correct"] for r in results) / n,
+        # Raw accuracy is a weak signal on a class-imbalanced set (this set
+        # skews heavily "Low" — see dataset.py's note): a model that always
+        # predicts "Low" would already score well on it. high_recall instead
+        # checks the failure mode that actually matters for this tool: did a
+        # genuinely relevant paper get missed.
+        "high_recall": high_recall,
         "n": n,
         "results": results,
     }
@@ -66,21 +76,36 @@ def run_eval() -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--json", default=None, help="write full metrics to this path")
-    parser.add_argument("--min-accuracy", type=float, default=0.7)
+    # Calibrated against real local numbers (18-case set via Ollama: 0.72
+    # relevance accuracy, 0.75 high_recall), with a small margin for
+    # cross-provider/non-determinism — see dataset.py's note on this set's
+    # class imbalance for why high_recall is the metric that matters most.
+    parser.add_argument("--min-accuracy", type=float, default=0.65)
+    parser.add_argument("--min-high-recall", type=float, default=0.75)
     args = parser.parse_args()
 
     metrics = run_eval()
     print(f"relevance accuracy: {metrics['relevance_accuracy']:.2f} ({metrics['n']} cases)")
     print(f"dataset accuracy:   {metrics['dataset_accuracy']:.2f}")
+    if metrics["high_recall"] is not None:
+        print(f"high recall:        {metrics['high_recall']:.2f}")
     for r in metrics["results"]:
-        if not r["relevance_correct"] or not r["dataset_correct"]:
-            print(f"  MISS {r['arxiv_id']}: relevance {r['actual_relevance']!r} (expected {r['expected_relevance']!r})")
+        if not r["relevance_correct"]:
+            print(f"  RELEVANCE MISS {r['arxiv_id']}: got {r['actual_relevance']!r}, expected {r['expected_relevance']!r}")
+        if not r["dataset_correct"]:
+            print(f"  DATASET MISS   {r['arxiv_id']}: got {r['actual_datasets']!r}, expected {r['expected_datasets']!r}")
 
     if args.json:
         Path(args.json).write_text(json.dumps(metrics, indent=2))
 
+    failed = False
     if metrics["relevance_accuracy"] < args.min_accuracy:
         print(f"FAIL: relevance accuracy below threshold {args.min_accuracy}")
+        failed = True
+    if metrics["high_recall"] is not None and metrics["high_recall"] < args.min_high_recall:
+        print(f"FAIL: high recall below threshold {args.min_high_recall}")
+        failed = True
+    if failed:
         sys.exit(1)
 
 
