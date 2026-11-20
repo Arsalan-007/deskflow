@@ -26,5 +26,5 @@ jobs:
           # GitHub-hosted runner, so the scheduled/dispatched workflow always
           # uses the hosted provider — the provider-swap is load-bearing
           # here, not just a nice-to-have.
-          LLM_PROVIDER: anthropic
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_PROVIDER: gemini
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

@@ -36,36 +36,33 @@ class OllamaGenerator:
         return json.loads(resp["message"]["content"])
 
 
-class AnthropicGenerator:
+class GeminiGenerator:
     def __init__(self, model: str, api_key: str) -> None:
-        import anthropic
+        from google import genai
 
-        self._client = anthropic.Anthropic(api_key=api_key)
+        self._client = genai.Client(api_key=api_key)
         self._model = model
 
     def complete_json(self, system: str, user: str, schema: dict) -> dict:
-        # Tool-use with a single forced tool is Anthropic's structured-output
-        # mechanism: the model's reply IS the validated tool input, not prose
-        # to parse.
-        tool_name = "emit_extraction"
-        resp = self._client.messages.create(
+        from google.genai import types
+
+        resp = self._client.models.generate_content(
             model=self._model,
-            max_tokens=1024,
-            system=system,
-            messages=[{"role": "user", "content": user}],
-            tools=[{"name": tool_name, "description": "Emit the structured extraction.", "input_schema": schema}],
-            tool_choice={"type": "tool", "name": tool_name},
+            contents=user,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                response_mime_type="application/json",
+                response_json_schema=schema,
+                temperature=0,
+            ),
         )
-        for block in resp.content:
-            if block.type == "tool_use":
-                return block.input
-        raise RuntimeError("anthropic: model did not return a tool_use block")
+        return json.loads(resp.text)
 
 
 def get_generator() -> Generator:
     provider = settings.llm_provider.lower()
     if provider == "ollama":
         return OllamaGenerator(model=settings.ollama_model, host=settings.ollama_host)
-    if provider == "anthropic":
-        return AnthropicGenerator(model=settings.anthropic_model, api_key=settings.anthropic_api_key)
-    raise ValueError(f"Unknown LLM_PROVIDER: {provider!r} (expected 'ollama' or 'anthropic')")
+    if provider == "gemini":
+        return GeminiGenerator(model=settings.gemini_model, api_key=settings.gemini_api_key)
+    raise ValueError(f"Unknown LLM_PROVIDER: {provider!r} (expected 'ollama' or 'gemini')")

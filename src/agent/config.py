@@ -46,15 +46,15 @@ class Settings(BaseSettings):
     llm_provider: str = "ollama"
     ollama_model: str = "mistral"
     ollama_host: str = "http://localhost:11434"
-    anthropic_api_key: str = ""
-    anthropic_model: str = "claude-sonnet-5"
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-2.5-flash"
 
     deskflow_config_path: str = "deskflow.config.yaml"
 
     @field_validator(
         "notion_token",
         "telegram_bot_token",
-        "anthropic_api_key",
+        "gemini_api_key",
         mode="before",
     )
     @classmethod

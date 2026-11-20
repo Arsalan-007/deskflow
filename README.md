@@ -34,7 +34,7 @@ The agent never invents a dataset or result. If an abstract doesn't state one, t
 
 This design deliberately avoids three bugs diagnosed in an earlier project of mine (`langgraph-verify-agent`), whose citation-verification step this one is modeled on:
 1. That project forces "unverified" whenever there's nothing to check — so a model correctly abstaining looks identical to a failed check. Here, `"not stated"` is explicitly treated as valid.
-2. That project regex-extracts JSON from free-form model text (`\[.*\]`), which breaks on ordinary trailing chatter containing a stray bracket. Here, extraction uses **constrained structured output** at the SDK level instead — Ollama's `format` (JSON schema) for the local default, Anthropic's forced tool-use for the hosted swap — so there's no prose to parse.
+2. That project regex-extracts JSON from free-form model text (`\[.*\]`), which breaks on ordinary trailing chatter containing a stray bracket. Here, extraction uses **constrained structured output** at the SDK level instead — Ollama's `format` (JSON schema) for the local default, Gemini's `response_json_schema` for the hosted swap — so there's no prose to parse.
 3. That project requires an exact verbatim substring match for grounding, which flags correct-but-reworded claims as unsupported. Here, grounding is token-overlap against the abstract — strict enough to catch invention, lenient enough not to punish normal paraphrasing.
 
 ## Setup
@@ -42,7 +42,7 @@ This design deliberately avoids three bugs diagnosed in an earlier project of mi
 1. **arXiv**: nothing to do — public API, no key.
 2. **Notion**: create a database with properties `Title` (title), `ArxivID` (text), `Link` (url), `Summary`/`Datasets`/`Result` (text), `Relevance` (select: High/Medium/Low/Needs Review), `Status` (select: Unread/Read). Create an internal integration at `notion.so/my-integrations`, then **open the database → ••• → Connections → add the integration** (easy to miss; causes silent 403s otherwise).
 3. **Telegram**: message `@BotFather` → `/newbot` → copy the token. Message your new bot once, then hit `https://api.telegram.org/bot<token>/getUpdates` to read your chat id.
-4. **LLM**: install [Ollama](https://ollama.com) and `ollama pull mistral` for local/free use. Optionally set `ANTHROPIC_API_KEY` to use the hosted provider instead — **required** for the GitHub Actions workflow, since Ollama has nothing to run against on a hosted runner.
+4. **LLM**: install [Ollama](https://ollama.com) and `ollama pull mistral` for local/free use. Get a free `GEMINI_API_KEY` from [Google AI Studio](https://aistudio.google.com/apikey) to use the hosted provider instead — **required** for the GitHub Actions workflow, since Ollama has nothing to run against on a hosted runner.
 5. **GitHub** (for the dashboard's "Run now" button): once this repo is pushed, create a fine-grained PAT scoped to *only this repo*, with *only* the `Actions: write` permission.
 6. Copy `.env.example` → `.env` and `dashboard/.env.local.example` → `dashboard/.env.local`, fill in the values above. Add the same secrets as GitHub Actions repo secrets for the scheduled workflow.
 
