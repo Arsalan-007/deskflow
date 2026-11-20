@@ -33,6 +33,22 @@ Relevance rubric:
 - Medium: {rubric_medium}
 - Low: {rubric_low}
 
+Worked examples (these illustrate the distinction, they are not papers you will see):
+- "A retrieval-augmented chatbot that answers restaurant customers' menu questions" -> \
+Low. It only USES RAG as a tool inside an unrelated application; it contributes no \
+retrieval or evaluation method of its own.
+- "A new algorithm for selecting which retrieved passages an LLM should actually read" \
+-> High. This is a retrieval METHOD contribution, relevant regardless of what domain \
+the paper demos it on.
+- "A distributed system that scales approximate nearest-neighbor search to billions of \
+vectors, focused on throughput and index-build time" -> Low. Pure systems/infrastructure \
+engineering is not a retrieval-QUALITY or evaluation contribution, even though ANN \
+search underlies retrieval.
+- "A benchmark for evaluating RAG grounding in a specific non-English legal domain" -> \
+Low, unless the researcher's interests explicitly include that language/domain or the \
+benchmark's methodology clearly generalizes beyond it — domain-specific benchmarks are \
+not automatically High just because they evaluate RAG.
+
 If you are not confident in your relevance judgement, set confidence to "low" rather \
 than guessing high confidence.
 
