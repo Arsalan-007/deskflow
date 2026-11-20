@@ -47,7 +47,10 @@ class Settings(BaseSettings):
     ollama_model: str = "mistral"
     ollama_host: str = "http://localhost:11434"
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-3.8-flash"
+    # "Flash Lite" has a far more generous free-tier daily quota (500 RPD)
+    # than the full "Flash" model (20 RPD) — confirmed against the account's
+    # own aistudio.google.com/rate-limit page, not guessed from docs.
+    gemini_model: str = "gemini-3.5-flash-lite"
 
     deskflow_config_path: str = "deskflow.config.yaml"
 
