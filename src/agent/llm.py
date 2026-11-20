@@ -54,6 +54,10 @@ class GeminiGenerator:
                 response_mime_type="application/json",
                 response_json_schema=schema,
                 temperature=0,
+                # Without a timeout, a rate-limited/overloaded response can
+                # leave the SDK's internal retry logic hanging far longer
+                # than any one extraction call should reasonably take.
+                http_options=types.HttpOptions(timeout=30_000),
             ),
         )
         return json.loads(resp.text)
