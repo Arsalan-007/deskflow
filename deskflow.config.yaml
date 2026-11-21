@@ -2,25 +2,37 @@
 
 topics:
   - "tabular deep learning"
-  - "retrieval-augmented generation"
+  - "tabular representation learning"
+  - "tabular foundation models"
+  - "differentiable trees"
+  - "tabular transformers"
+  - "Numerical Embeddings"
 
 research_interests: >
-  M.Sc. Data Analytics student working on tabular deep learning (MLP + attention
-  architectures) and retrieval-augmented generation systems. Most interested in
-  papers with concrete benchmark results on tabular classification/regression,
-  or RAG retrieval/evaluation methodology.
+  M.Sc. Data Analytics student working on tabular deep learning: MLP and
+  attention-based architectures, tabular representation learning, tabular
+  foundation models, differentiable trees, tabular transformers, and
+  numerical embeddings for tabular features. Most interested in papers that
+  propose a new tabular-specific architecture or technique with concrete
+  benchmark results on tabular classification/regression — not papers that
+  merely apply tabular data to an unrelated problem, or use generic
+  (non-tabular-specific) deep learning methods on tabular data without
+  contributing something tabular-specific.
 
 relevance_rubric:
   High: >
-    Directly contributes a retrieval, evaluation, or tabular-DL METHOD or
-    benchmark result. A paper that merely USES RAG as a tool inside an
-    unrelated application domain (e.g. healthcare, agriculture, legal,
-    enterprise customer support, companion chatbots) is NOT High just
-    because RAG is central to its system — score those Medium or Low
-    instead, based on whether the underlying retrieval/eval technique
-    itself is novel enough to be useful outside that domain.
-  Medium: "Adjacent subfield or a useful technique, not a direct baseline."
-  Low: "Tangential; only loosely related to the research interests above, or a domain-specific RAG application with no transferable methodology."
+    Proposes a new tabular-specific architecture, representation, embedding
+    scheme, or training method (e.g. a new tabular transformer, foundation
+    model, differentiable tree method, or numerical embedding technique),
+    with concrete benchmark results on tabular classification/regression. A
+    paper that merely evaluates an existing generic method ON tabular data,
+    or uses tabular data inside an unrelated application domain (e.g.
+    healthcare, finance, retail) without proposing a new tabular-specific
+    technique, is NOT High just because tabular data appears in it — score
+    those Medium or Low instead, based on whether the technique itself is
+    tabular-specific and novel.
+  Medium: "Adjacent subfield or a useful generic technique applied to tabular data, not a direct tabular-specific architectural contribution."
+  Low: "Tangential; only loosely related to the research interests above, or a domain-specific application that happens to use tabular data with no transferable tabular-modeling technique."
 
 # Lookback window for each run, in days. A run only considers papers published
 # in [now - lookback_days, now); already-processed arXiv IDs are filtered

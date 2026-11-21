@@ -34,20 +34,22 @@ Relevance rubric:
 - Low: {rubric_low}
 
 Worked examples (these illustrate the distinction, they are not papers you will see):
-- "A retrieval-augmented chatbot that answers restaurant customers' menu questions" -> \
-Low. It only USES RAG as a tool inside an unrelated application; it contributes no \
-retrieval or evaluation method of its own.
-- "A new algorithm for selecting which retrieved passages an LLM should actually read" \
--> High. This is a retrieval METHOD contribution, relevant regardless of what domain \
-the paper demos it on.
-- "A distributed system that scales approximate nearest-neighbor search to billions of \
-vectors, focused on throughput and index-build time" -> Low. Pure systems/infrastructure \
-engineering is not a retrieval-QUALITY or evaluation contribution, even though ANN \
-search underlies retrieval.
-- "A benchmark for evaluating RAG grounding in a specific non-English legal domain" -> \
-Low, unless the researcher's interests explicitly include that language/domain or the \
-benchmark's methodology clearly generalizes beyond it — domain-specific benchmarks are \
-not automatically High just because they evaluate RAG.
+- "A hospital readmission prediction model that applies standard XGBoost to tabular \
+patient records" -> Low. It only USES an existing generic method on tabular data inside \
+an unrelated application domain; it contributes no new tabular-specific architecture or \
+technique.
+- "A new numerical embedding scheme for continuous features that improves transformer \
+performance on tabular classification benchmarks" -> High. This is a tabular-specific \
+technique contribution with concrete benchmark results, relevant regardless of which \
+benchmark datasets it's demoed on.
+- "A systems paper measuring GPU memory usage across cloud providers when training large \
+models, evaluated partly on tabular workloads" -> Low. Pure infrastructure/systems \
+engineering is not a tabular-modeling contribution, even though tabular data appears in \
+the evaluation.
+- "A domain-specific benchmark for credit-risk scoring using tree-based models" -> Low, \
+unless the paper's methodology (e.g. a new differentiable-tree technique) clearly \
+generalizes beyond that one application — domain-specific benchmarks are not \
+automatically High just because they use tabular data.
 
 If you are not confident in your relevance judgement, set confidence to "low" rather \
 than guessing high confidence.

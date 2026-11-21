@@ -3,13 +3,16 @@ against their stated research interests (deskflow.config.yaml) — not copied
 from the pipeline's own output, since that would make the eval circular.
 `expected_datasets` is an independent reading of each abstract's actual text.
 
-Note on class balance: within the "retrieval-augmented generation" arXiv
-topic, most real papers turn out tangential to this user's specific interest
-(retrieval/eval methodology + tabular DL), so this set skews heavily toward
-"Low" (~13/18). A model that always predicts "Low" would already score high
-on raw relevance accuracy — see evaluate.py's separate `high_recall` metric,
-which checks whether genuinely relevant ("High") papers are actually caught,
-since missing one of those is the failure mode that actually matters."""
+This set was rebuilt after `topics` pivoted from RAG to pure tabular deep
+learning. Two sources: (1) papers from the user's own pre-existing tabular-DL
+research corpus (rag-tabular-assistant/data/pdfs/) — genuinely relevant by
+construction, giving solid High cases; (2) fresh real arXiv results from the
+new topics, which surfaced the Low/Medium cases needed for balance: several
+domain-application papers that *use* an existing tabular foundation model
+without contributing new tabular methodology (energetic materials, telecom
+churn, photometric redshift), plus one genuine search false-positive
+(2610.19601 matched "differentiable trees" via an incidental phrase in an
+unrelated LLM-pretraining paper) that makes a clean guard-rail case."""
 
 from __future__ import annotations
 
@@ -59,250 +62,257 @@ EVAL_CASES: list[EvalCase] = [
         "expected_datasets": "not stated",
     },
     {
-        "arxiv_id": "2611.16148",
-        "title": "Calibrated Early Termination with Bounded Optimality Gaps for Constrained Vector Search",
+        "arxiv_id": "1908.07442",
+        "title": "TabNet: Attentive Interpretable Tabular Learning",
         "abstract": (
-            "Vector search over learned embeddings is the retrieval layer of recommendation "
-            "and retrieval-augmented generation, and many applications cap how many answer "
-            "items one category may contribute. Graph indexes answer a query by best-first "
-            "traversal, and where it stops determines its cost and whether its answer is "
-            "exact. We study early termination for such constrained k-nearest-neighbor (k-NN) "
-            "queries, with plain k-NN as a special case, and seek the cheapest stopping rule "
-            "whose answer is exact with probability at least 1-epsilon. On two datasets of one "
-            "million items each, CaST replayed on logged searches costs at most 1.132 times "
-            "the class optimum for risk levels from 0.03 to 0.10, at 95% joint confidence per "
-            "setting. At a common risk target on held-out queries, CaST is faster than every "
-            "other calibrated rule we time, which take 4.8% to 45.5% more mean time."
+            "We propose a novel high-performance and interpretable canonical deep tabular "
+            "data learning architecture, TabNet. TabNet uses sequential attention to choose "
+            "which features to reason from at each decision step, enabling interpretability "
+            "and more efficient learning as the learning capacity is used for the most "
+            "salient features. We demonstrate that TabNet outperforms other variants on a "
+            "wide range of non-performance-saturated tabular datasets and yields "
+            "interpretable feature attributions plus insights into its global behavior. "
+            "Finally, we demonstrate self-supervised learning for tabular data, "
+            "significantly improving performance when unlabeled data is abundant."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "not stated",
+    },
+    {
+        "arxiv_id": "1909.06312",
+        "title": "Neural Oblivious Decision Ensembles for Deep Learning on Tabular Data",
+        "abstract": (
+            "In an important case of heterogenous tabular data, the advantage of DNNs over "
+            "shallow counterparts remains questionable; there is no sufficient evidence that "
+            "deep learning machinery allows constructing methods that outperform gradient "
+            "boosting decision trees (GBDT). We introduce Neural Oblivious Decision "
+            "Ensembles (NODE), a new deep learning architecture designed to work with any "
+            "tabular data. NODE generalizes ensembles of oblivious decision trees, but "
+            "benefits from both end-to-end gradient-based optimization and the power of "
+            "multi-layer hierarchical representation learning. With an extensive "
+            "experimental comparison to the leading GBDT packages on a large number of "
+            "tabular datasets, we demonstrate the advantage of the proposed NODE "
+            "architecture, which outperforms the competitors on most of the tasks."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "not stated",
+    },
+    {
+        "arxiv_id": "2012.06678",
+        "title": "TabTransformer: Tabular Data Modeling Using Contextual Embeddings",
+        "abstract": (
+            "We propose TabTransformer, a novel deep tabular data modeling architecture for "
+            "supervised and semi-supervised learning. The TabTransformer is built upon "
+            "self-attention based Transformers. The Transformer layers transform the "
+            "embeddings of categorical features into robust contextual embeddings to "
+            "achieve higher prediction accuracy. Through extensive experiments on fifteen "
+            "publicly available datasets, we show that the TabTransformer outperforms the "
+            "state-of-the-art deep learning methods for tabular data by at least 1.0% on "
+            "mean AUC, and matches the performance of tree-based ensemble models."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "not stated",
+    },
+    {
+        "arxiv_id": "2106.01342",
+        "title": "SAINT: Improved Neural Networks for Tabular Data via Row Attention and Contrastive Pre-Training",
+        "abstract": (
+            "Tabular data underpins numerous high-impact applications of machine learning "
+            "from fraud detection to genomics and healthcare. We devise a hybrid deep "
+            "learning approach to solving tabular data problems. Our method, SAINT, "
+            "performs attention over both rows and columns, and it includes an enhanced "
+            "embedding method. We also study a new contrastive self-supervised pre-training "
+            "method for use when labels are scarce. SAINT consistently improves performance "
+            "over previous deep learning methods, and it even outperforms gradient boosting "
+            "methods, including XGBoost, CatBoost, and LightGBM, on average over a variety "
+            "of benchmark tasks."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "not stated",
+    },
+    {
+        "arxiv_id": "2203.05556",
+        "title": "On Embeddings for Numerical Features in Tabular Deep Learning",
+        "abstract": (
+            "Recently, Transformer-like deep architectures have shown strong performance on "
+            "tabular data problems. We argue that embeddings for numerical features are an "
+            "underexplored degree of freedom in tabular DL. We describe two conceptually "
+            "different approaches to building embedding modules: one based on a piecewise "
+            "linear encoding of scalar values, and one that utilizes periodic activations. "
+            "We empirically demonstrate that these two approaches can lead to significant "
+            "performance boosts compared to embeddings based on conventional blocks such as "
+            "linear layers and ReLU activations, and that after proper embeddings, simple "
+            "MLP-like models can perform on par with attention-based architectures."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "not stated",
+    },
+    {
+        "arxiv_id": "2207.01848",
+        "title": "TabPFN: A Transformer That Solves Small Tabular Classification Problems in a Second",
+        "abstract": (
+            "We present TabPFN, a trained Transformer that can do supervised classification "
+            "for small tabular datasets in less than a second, needs no hyperparameter "
+            "tuning and is competitive with state-of-the-art classification methods. TabPFN "
+            "performs in-context learning (ICL). On the 18 datasets in the OpenML-CC18 "
+            "suite that contain up to 1,000 training data points, we show that our method "
+            "clearly outperforms boosted trees and performs on par with complex "
+            "state-of-the-art AutoML systems with up to 230x speedup. We also validate these "
+            "results on an additional 67 small numerical datasets from OpenML."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "OpenML-CC18, OpenML",
+    },
+    {
+        "arxiv_id": "2410.24210",
+        "title": "TabM: Advancing Tabular Deep Learning with Parameter-Efficient Ensembling",
+        "abstract": (
+            "Deep learning architectures for supervised learning on tabular data range from "
+            "simple multilayer perceptrons (MLP) to sophisticated Transformers and "
+            "retrieval-augmented methods. Our new model TabM relies on efficient "
+            "ensembling, where one TabM efficiently imitates an ensemble of MLPs and "
+            "produces multiple predictions per object, sharing most of their parameters. "
+            "Using TabM as a new baseline, we perform a large-scale evaluation of tabular "
+            "DL architectures on public benchmarks in terms of both task performance and "
+            "efficiency. We find that TabM demonstrates the best performance among tabular "
+            "DL models."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "not stated",
+    },
+    {
+        "arxiv_id": "2610.25558",
+        "title": "FTFM: Factorized Tabular Foundation Models",
+        "abstract": (
+            "Tabular foundation models (TFMs) are becoming a powerful alternative to "
+            "conventional tabular learning, adapting to new datasets in context without "
+            "task-specific training. Current architectures face a trade-off: models that "
+            "preserve cell-level representations are expensive, while faster models "
+            "collapse each row into a fixed embedding and lose fine-grained state. We "
+            "introduce Factorized Tabular Foundation Models (FTFM), which preserve cell "
+            "representations while factorizing their computation through one contextual "
+            "latent per row and one per column. FTFM achieves competitive predictive "
+            "performance in tabular classification on major benchmarks such as TabArena and "
+            "BeyondArena."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "TabArena, BeyondArena",
+    },
+    {
+        "arxiv_id": "2611.24214",
+        "title": "Towards Reliable Scaling Laws for Tabular Foundation Models",
+        "abstract": (
+            "Scaling laws are widely used to predict foundation model performance and guide "
+            "compute allocation. Tabular foundation models (TFMs) differ from conventional "
+            "foundation models in that they are pretrained on virtually unlimited synthetic "
+            "data, while ultimately being evaluated on real-world datasets. We investigate "
+            "whether scaling laws for TabPFNv2-style models reliably extrapolate to larger "
+            "compute budgets. Our analysis reveals differences between synthetic and "
+            "real-world scaling behavior, and shows that compute-optimal scaling requires "
+            "expanding the range of synthetic pretraining dataset sizes alongside model size "
+            "and training compute."
+        ),
+        "expected_relevance": "High",
+        "expected_datasets": "not stated",
+    },
+    {
+        "arxiv_id": "2608.26923",
+        "title": "TabuLM: Morphology-Aware Tabular Pre-training for Low-Resource Languages",
+        "abstract": (
+            "We present TabuLM, the first language model pre-trained on Kinyarwanda tabular "
+            "data. TabuLM extends KinyaBERT-large, a two-tier morphological transformer, "
+            "with additive row, column, and cell-type embeddings and a learned "
+            "table-structure attention bias. Pre-training uses two new objectives: Masked "
+            "Cell Recovery (MCR) and Column Type Prediction (CTP). We introduce TabQA-kin, "
+            "the first native Kinyarwanda table question-answering benchmark comprising 526 "
+            "QA pairs across 31 tables. TabuLM achieves 62.0% exact match on TabQA-kin, "
+            "outperforming KinyaBERT-large by 5.7 EM points and all multilingual baselines "
+            "by 11.7-12.7 points."
         ),
         "expected_relevance": "Medium",
-        "expected_datasets": "not stated",
+        "expected_datasets": "TabQA-kin",
     },
     {
-        "arxiv_id": "2611.23147",
-        "title": "AI Companions for Young Adult Caregivers: Practical Advice, Emotional Depth, and the Limits of Metric Evaluation",
+        "arxiv_id": "2611.01090",
+        "title": "Numerical Embeddings for CTR Prediction: A Taxonomy, Unified Benchmark, and Open-Source FuxiCTR Extension",
         "abstract": (
-            "Young adult caregivers (YACs) are individuals aged 18 to 25 currently taking "
-            "care of a family member, partner, or friend facing chronic illness. We present "
-            "Carebot, it uses an open-weight LLM (Gemma 3-27B) as its base model, on which we "
-            "compared fine-tuning, retrieval-augmented generation (RAG), and a combination of "
-            "both. An LLM judge preferred Carebot's responses over the base model's in 85% of "
-            "evaluated pairs. We then conducted a user study with 90 YACs. We argue that "
-            "support tools for YACs require situation-sensitive emotional depth and aligned "
-            "evaluation frameworks to study their effectiveness."
+            "Numerical embeddings map scalar features into vectors before a click-through "
+            "rate (CTR) backbone combines the fields. NumEmbBench is the first open "
+            "benchmark dedicated to comparing numerical embeddings for CTR prediction. We "
+            "classify 18 configurations into six mechanism-based families and evaluate them "
+            "through one FuxiCTR interface. After equal-budget validation tuning, we compare "
+            "frozen configurations on three datasets, nine backbones, and five seeds. DEER "
+            "has the best mean rank, but six methods lead at least one dataset-backbone "
+            "setting."
+        ),
+        "expected_relevance": "Medium",
+        "expected_datasets": "NumEmbBench",
+    },
+    {
+        "arxiv_id": "2611.12942",
+        "title": "Tabular Foundation Models vs Tuned Gradient Boosting for Telecom Churn: A Profit- and Calibration-Aware Evaluation",
+        "abstract": (
+            "A churn model is useful through the customers it selects for a retention "
+            "offer. Tabular foundation models (TFMs) were recently reported to decisively "
+            "outperform tree ensembles for churn; that comparison used untuned "
+            "gradient-boosted trees and ranking metrics only. We ask whether the advantage "
+            "holds against tuned GBDTs when judged by expected campaign profit. Four TFMs "
+            "face LightGBM, XGBoost and CatBoost tuned with Optuna, on five public telecom "
+            "datasets: Cell2Cell, Iranian, and Orange among them. TabPFN-3.5 earns "
+            "significantly more expected maximum profit on two datasets, Cell2Cell (1.9%) "
+            "and Iranian (7.6%)."
+        ),
+        "expected_relevance": "Low",
+        "expected_datasets": "Cell2Cell, Iranian, Orange",
+    },
+    {
+        "arxiv_id": "2611.14462",
+        "title": "Accurate predictions of properties of energetic materials with tabular foundation models",
+        "abstract": (
+            "We use TabPFN, a recently developed tabular foundation model, to predict three "
+            "properties of energetic materials: impact sensitivity, decomposition "
+            "temperature and crystal density. Without any hyperparameter tuning, TabPFN "
+            "outperforms the best published models for all three properties. It also "
+            "substantially outperforms a wide range of established machine-learning models, "
+            "including tuned gradient boosting (XGBoost), random forests and Gaussian "
+            "processes. TabPFN is also among the fastest models we consider, more than an "
+            "order of magnitude faster than XGBoost."
         ),
         "expected_relevance": "Low",
         "expected_datasets": "not stated",
     },
     {
-        "arxiv_id": "2611.18771",
-        "title": "Agri-MRAG: Parameter-Enhanced Multimodal Retrieval-Augmented Generation for Agricultural Visual Question Answering",
+        "arxiv_id": "2610.39332",
+        "title": "Tabular Foundation Models Dramatically Outperform Bespoke Photometric Redshift Estimators",
         "abstract": (
-            "Multimodal Retrieval-Augmented Generation (MRAG) has shown promise for "
-            "Agricultural Visual Question Answering (Agri-VQA). We propose Agri-MRAG, a "
-            "multimodal retrieval-augmented framework for agricultural VQA. For evaluation, "
-            "we use PlantVillageVQA as a broad agricultural benchmark and construct PlantVQA, "
-            "a region-specific forestry and fruit crop VQA dataset containing 7,514 images and "
-            "15,028 expert-verified question-answer pairs. Experiments show that Agri-MRAG "
-            "achieves ROUGE-L scores of 41.21 and 46.58 on the two datasets, outperforming "
-            "mRAG by 11.70 and 4.51 points, and VisRAG by 8.80 and 3.39 points, respectively."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "PlantVillageVQA, PlantVQA",
-    },
-    {
-        "arxiv_id": "2611.23931",
-        "title": "Quantifying the Intrusiveness of Retrofitting Retrieval-Augmented Generation onto Legacy Software Systems",
-        "abstract": (
-            "Enterprises increasingly add retrieval-augmented generation (RAG) to existing "
-            "REST and monolithic systems. We present a taxonomy of three retrofit patterns, "
-            "the Legacy Intrusion Score (LIS), a static evaluation on five legacy systems, and "
-            "a live case study that deploys all three patterns as separate OS processes. The "
-            "sidecar adds no detectable latency to the legacy endpoint, whereas SDK-embed and "
-            "naive-invasive add 569 and 475 ms. Retrieval hit@1 is 0.95; three hosted LLMs "
-            "answer all 12 test questions correctly and a local model 9/12."
+            "Estimating galaxy redshifts (photo-z's) from imaging data alone is essential "
+            "for studies of extragalactic astrophysics and cosmology. We show that tabular "
+            "foundation models (TFMs) can outperform bespoke estimators using only "
+            "in-context learning. Evaluating on a widely used benchmark dataset, we find "
+            "that TFMs predicting full probability distributions in a single forward pass "
+            "systematically outperform bespoke estimators, matching or exceeding baselines "
+            "trained on over 40,000 galaxies with just 1,000 training context examples."
         ),
         "expected_relevance": "Low",
         "expected_datasets": "not stated",
     },
+    # guard-rail: a real arXiv search false-positive. "differentiable tree attention" is
+    # an incidental phrase in an LLM-pretraining paper, not actually about tabular data.
     {
-        "arxiv_id": "2611.19253",
-        "title": "KaleidoKV: Rearranging Evidence for Efficient KV Cache Reuse in Offline RAG Inference",
+        "arxiv_id": "2610.19601",
+        "title": "PA1-OPD: One-Step Prefix-Augmented On-Policy Distillation for Language Model Pretraining",
         "abstract": (
-            "Retrieval-augmented generation (RAG) augments large language models (LLMs) on "
-            "question-answering (QA) tasks with retrieved evidence at inference time. We "
-            "propose KaleidoKV, a framework that plans evidence orders across the batch and "
-            "controls when requests enter the engine while preserving each request's evidence "
-            "set and content. Experiments on four QA workloads and four LLMs show that "
-            "KaleidoKV achieves the highest throughput and lowest mean time to first token in "
-            "all 16 settings, with approximately 1.24-1.75x the throughput of the strongest "
-            "baseline, including planning time."
+            "Knowledge distillation (KD) improves language-model pretraining by matching "
+            "teacher distributions at corpus prefixes, but provides no direct supervision "
+            "at contexts induced by student predictions. We introduce PA1-OPD, which "
+            "augments corpus-path distillation with teacher feedback after one "
+            "student-sampled transition per selected prefix. Data-anchored roots support "
+            "parallel sampling, and differentiable tree attention shares prefix computation "
+            "without changing inference. In two continued-pretraining settings, full "
+            "coverage improves held-out cross-entropy over KD across C4, PG-19, and Pile at "
+            "every evaluated checkpoint."
         ),
         "expected_relevance": "Low",
-        "expected_datasets": "not stated",
-    },
-    {
-        "arxiv_id": "2611.16425",
-        "title": "RMIT-ADM+S at TREC RAG 2026: Research Agents, Retriever Ablations, and Open-Weight Replication",
-        "abstract": (
-            "We describe the RMIT-ADM+S team's participation in the TREC 2026 "
-            "Retrieval-Augmented Generation (RAG) track using the ClimbMix corpus. We "
-            "submitted seven research-agent runs using proprietary OpenAI and open-weight "
-            "models, exploring different retrieval strategies, writer models, and agent "
-            "workflows. Pre-submission ablations identified writer selection and "
-            "adjacent-chunk expansion as the main factors affecting answer quality. In the "
-            "official NIST evaluation, six of seven runs exceeded the track median across all "
-            "three rubric/nugget collections."
-        ),
-        "expected_relevance": "High",
-        "expected_datasets": "ClimbMix",
-    },
-    {
-        "arxiv_id": "2611.16590",
-        "title": "AstroMemBench: A Benchmark for Memory Systems in Embodied Spacecraft Agents",
-        "abstract": (
-            "Long-term spacecraft autonomy requires embodied agents to use operational "
-            "history under communication delays and time-critical operations. We introduce "
-            "AstroMemBench, covering 16 memory subchallenges through 140 templates and 2240 "
-            "instances across nine tasks in planetary surface operations, on-orbit servicing, "
-            "and deep-space exploration. Main experiments compare six configurations. Mem0, "
-            "Chain-of-Memory, LightMem, and retrieval-augmented generation (RAG) improve "
-            "same-session mean scores over native Pi Agent, with no clear advantage of the "
-            "three memory systems over RAG."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "AstroMemBench",
-    },
-    {
-        "arxiv_id": "2611.17161",
-        "title": "Cited but Unused: Parametric Provenance in Retrieval-Augmented Generation",
-        "abstract": (
-            "Retrieval-augmented generation systems attach citations to attribute claims to "
-            "their sources. These citations frequently misstate provenance, and standard "
-            "verification cannot detect this. We measure provenance by counterfactual value "
-            "substitution: a fact in the retrieved passages is replaced with a false variant "
-            "and the model re-queried. We find that across five sizes of one model family and "
-            "a second comparator family, 1.2% to 15.7% of citable claims derive from "
-            "parametric memory rather than the retrieved context. We further find that "
-            "natural language inference verification, the standard approach, gives results "
-            "indistinguishable from chance across models, even when restricted to the cited "
-            "passage."
-        ),
-        "expected_relevance": "High",
-        "expected_datasets": "not stated",
-    },
-    {
-        "arxiv_id": "2611.16366",
-        "title": "CURATOR: Scalable Fine-grained Evidence Selection for Retrieval-Augmented Generation using Decision Models",
-        "abstract": (
-            "Retrieval-augmented generation (RAG) provides entire retrieved passages to the "
-            "LLM, even though only a handful of spans within them contain the evidence "
-            "pertaining to the question. We introduce CURATOR, a fine-tuned decision model "
-            "trained to make reliable evidence-selection decisions over large candidate sets. "
-            "By training a decision model to select varying numbers of supporting spans from "
-            "large candidate pools, CURATOR develops the capability to select evidence for RAG "
-            "while retaining the computational efficiency of joint decision-making. CURATOR "
-            "maintains a strong evidence discrimination capability as the number of candidates "
-            "increases, generalizes across different tasks and document domains, and improves "
-            "downstream RAG performance."
-        ),
-        "expected_relevance": "High",
-        "expected_datasets": "not stated",
-    },
-    {
-        "arxiv_id": "2611.19862",
-        "title": "Bioformer-RetroMAE: retrieval-oriented pretraining of a compact biomedical language model for literature search",
-        "abstract": (
-            "Dense retrieval is increasingly used for biomedical literature search and "
-            "retrieval-augmented generation (RAG). We present Bioformer-RetroMAE, a compact "
-            "(43M-parameter) retrieval-oriented biomedical encoder obtained by continually "
-            "pretraining Bioformer8L with RetroMAE on approximately 32 million PubMed titles "
-            "and abstracts. After bi-encoder fine-tuning with BM25 hard negatives, we "
-            "evaluated it on BioASQ Task 12B test questions by retrieving from all PubMed "
-            "abstracts. Bioformer-RetroMAE outperformed BioBERT and PubMedBERT bi-encoders "
-            "fine-tuned under identical settings on all metrics."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "PubMed, BioASQ Task 12B",
-    },
-    {
-        "arxiv_id": "2611.20261",
-        "title": "Estimating Outpatient Visit Prices from Hospital Price Transparency Data using Large Language Models",
-        "abstract": (
-            "Hospital care prices in the United States have increased substantially, yet "
-            "patients lack effective tools to access and compare costs. To estimate visit "
-            "prices, we used a retrieval-augmented generation (RAG) framework to analyze "
-            "price transparency (PT) files from three major hospitals in Maryland and the "
-            "surrounding region. The GPT-BM25 retriever achieved the best performance, with "
-            "average price MAPE of 19.44% for individual procedures and 4.90% for groups, "
-            "compared with 147.98% and 82.82%, respectively, for the no-RAG baseline."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "not stated",
-    },
-    {
-        "arxiv_id": "2611.19333",
-        "title": "Orbit AI: Evaluating Tool-Augmented Agents For Enterprise Question Answering",
-        "abstract": (
-            "Enterprise information is commonly stored across multiple platforms rather than "
-            "in one centralized location. We evaluate Orbit AI, a tool-based "
-            "retrieval-augmented generation (RAG) system that uses a ReAct agent implemented "
-            "with LangGraph to retrieve and combine information from three different "
-            "workspace sources. The held-out evaluation set contains 80 questions designed "
-            "for Phase 3 workspace; Gemini 3.5 Flash Lite achieves an accuracy of 86.25% with "
-            "the complete agent. Document-only RAG achieves 60.00%, and the plain LLM achieves "
-            "23.13%."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "not stated",
-    },
-    {
-        "arxiv_id": "2611.24039",
-        "title": "A Capability Framework for Evaluating Agentic AI Platforms in Regulated Enterprises",
-        "abstract": (
-            "Agentic AI platforms are being procured faster than they can be measured. We "
-            "report an industrial evaluation programme (\"bakeoff\") run by the innovation "
-            "laboratory of a global bank in which ten platforms were assessed by a "
-            "cross-functional panel on nine capability dimensions across three "
-            "financial-services workloads: counterparty credit risk, retrieval-augmented "
-            "generation and process automation. A secondary analysis finds Cronbach's alpha = "
-            "0.98 across nominally distinct dimensions, a halo effect indicating that "
-            "demonstration-based scoring measures presentation as much as capability."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "not stated",
-    },
-    {
-        "arxiv_id": "2611.19077",
-        "title": "HorizANN: Elastically Scaling Vector Search with Ghost Edges",
-        "abstract": (
-            "Approximate nearest neighbor search (ANNS) is fundamental to modern "
-            "data-intensive AI applications such as retrieval-augmented generation, "
-            "recommendation systems, and semantic search. We present HorizANN, a distributed "
-            "graph-based ANNS system that scales horizontally without requiring full index "
-            "reconstruction, using ghost edges to preserve cross-partition connectivity as "
-            "partition boundaries change during repartitioning. As the index grows from 100M "
-            "vectors on one worker to 1B vectors on ten workers, HorizANN inserts each 100M "
-            "vectors within 2.5 hours and sustains 3.4-3.5K queries per second at 0.998 "
-            "Recall@10."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "not stated",
-    },
-    {
-        "arxiv_id": "2611.21823",
-        "title": "TUSI: A Citation-Grounded Graph-Based Benchmark",
-        "abstract": (
-            "Evaluating retrieval-augmented generation (RAG) systems in Persian law remains "
-            "challenging because benchmarks lack realism, grounding, and coverage of legal "
-            "reasoning. We introduce TUSI-Bench, a structured Persian legal benchmark built "
-            "upon a multi-layered legal knowledge framework containing 7,261 legal articles. "
-            "TUSI-Bench provides two complementary evaluation tasks: TUSI-QA, an open-ended "
-            "question answering benchmark containing 1,999 questions, and TUSI-Bar, a "
-            "multiple-choice benchmark containing approximately 500 four-option questions. "
-            "Incorporating graph-based relations improves retrieval recall by up to 8 "
-            "percentage points compared to standard baselines."
-        ),
-        "expected_relevance": "Low",
-        "expected_datasets": "TUSI-Bench, TUSI-QA, TUSI-Bar",
+        "expected_datasets": "C4, PG-19, Pile",
     },
 ]
